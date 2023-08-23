@@ -168,5 +168,30 @@ class ValidationTest extends TestCase
 
         Log::info($message->toJson(JSON_PRETTY_PRINT));
     }
+    public function testValidatorAdditionalValidation(): void
+    {
+        $data = [
+            'username' => 'daud28ramadhan@gmail.com',
+            'password' => 'daud28ramadhan@gmail.com',
+        ];
+        $rules = [
+            'username' => 'required|email|max:100',
+            'password' => ['required', 'min:6', 'max:20'],
+        ];
+        $validator = Validator::make($data, $rules);
+        $validator->after(function (\Illuminate\Validation\Validator $validator) {
+            $data = $validator->getData();
+            if ($data['username'] === $data['password']) {
+                $validator->errors()->add('password', 'Password tidak boleh sama dengan username');
+            }
+        });
+        self::assertNotNull($validator);
 
+        self::assertTrue($validator->fails());
+        self::assertFalse($validator->passes());
+
+        $message = $validator->getMessageBag();
+
+        Log::info($message->toJson(JSON_PRETTY_PRINT));
+    }
 }
