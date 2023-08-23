@@ -15,6 +15,7 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 use function Laravel\Prompts\error;
+use function PHPUnit\Framework\assertTrue;
 
 class ValidationTest extends TestCase
 {
@@ -263,4 +264,58 @@ class ValidationTest extends TestCase
 
         Log::info($message->toJson(JSON_PRETTY_PRINT));
     }
+
+    public function testNestedArray()
+    {
+        $data = [
+            'name' => [
+                'first' => 'Daud',
+                'last' => 'Ramadhan',
+            ],
+            'address' => [
+                'city' => 'Jakarta',
+                'country' => 'Indonesia',
+            ]
+        ];
+        $rules = [
+            'name.first' => ['required', 'max:100'],
+            'name.last' => ['max:100',],
+            'address.city' => ['required', 'max:200'] ,
+            'address.country' => ['required', 'max:200'] ,
+        ];
+        $validator = Validator::make($data, $rules);
+        self::assertTrue($validator->passes());
+        self::assertFalse($validator->fails());
+
+    }
+    public function testNestedIndexedArray()
+    {
+        $data = [
+            'name' => [
+                'first' => 'Daud',
+                'last' => 'Ramadhan',
+            ],
+            'address' => [
+               [
+                   'city' => 'Jakarta',
+                   'country' => 'Indonesia',
+               ],
+                [
+                    'city' => 'Bandung',
+                    'country' => 'Indonesia',
+               ]
+            ]
+        ];
+        $rules = [
+            'name.first' => ['required', 'max:100'],
+            'name.last' => ['max:100',],
+            'address.*.city' => ['required', 'max:200'] ,
+            'address.*.country' => ['required', 'max:200'] ,
+        ];
+        $validator = Validator::make($data, $rules);
+        self::assertTrue($validator->passes());
+        self::assertFalse($validator->fails());
+
+    }
+
 }
