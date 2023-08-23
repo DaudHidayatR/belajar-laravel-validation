@@ -93,4 +93,24 @@ class ValidationTest extends TestCase
 
 
     }
+    public function testValidatorMultipleRule(): void
+    {
+        $data = [
+            'username' => 'daud',
+            'password' => 'daud',
+        ];
+        $rules = [
+            'username' => 'required|email|max:100',
+            'password' => ['required', 'min:6', 'max:20'],
+        ];
+        $validator = Validator::make($data, $rules);
+        self::assertNotNull($validator);
+
+        self::assertTrue($validator->fails());
+        self::assertFalse($validator->passes());
+
+        $message = $validator->getMessageBag();
+
+        Log::info($message->toJson(JSON_PRETTY_PRINT));
+    }
 }
