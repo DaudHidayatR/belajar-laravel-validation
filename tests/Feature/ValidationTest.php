@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -138,4 +139,34 @@ class ValidationTest extends TestCase
             Log::error($message->toJson(JSON_PRETTY_PRINT));
         }
     }
+
+    public function testValidatorInlineMessage(): void
+    {
+
+        $data = [
+            'username' => 'daud',
+            'password' => 'daud',
+        ];
+        $rules = [
+            'username' => 'required|email|max:100',
+            'password' => ['required', 'min:6', 'max:20'],
+        ];
+        $massage = [
+            'required' => ':attribute harus diisi',
+            'email' => ':attribute harus berupa email',
+            'max' => ':attribute maksimal :max karakter',
+            'min' => ':attribute minimal :min karakter',
+
+        ];
+        $validator = Validator::make($data, $rules, $massage);
+        self::assertNotNull($validator);
+
+        self::assertTrue($validator->fails());
+        self::assertFalse($validator->passes());
+
+        $message = $validator->getMessageBag();
+
+        Log::info($message->toJson(JSON_PRETTY_PRINT));
+    }
+
 }
