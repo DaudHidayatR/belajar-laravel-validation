@@ -141,6 +141,7 @@ return [
     'uppercase'            => 'The :attribute field must be uppercase.',
     'url'                  => 'The :attribute format is invalid.',
     'uuid'                 => 'The :attribute must be a valid UUID.',
+    'custom.uppercase'     => 'The :attribute field with :value must be UPPERCASE.',
     'attributes'           => [
         'address'                  => 'address',
         'age'                      => 'age',
@@ -213,10 +214,11 @@ return [
         'updated_at'               => 'updated at',
         'username'                 => 'username',
         'year'                     => 'year',
+
     ],
     'custom'               => [
-//        'username' => [
-//            'email' => 'We only accept email address for username',
-//        ],
+        'username' => [
+            'email' => 'We only accept email address for username',
+        ],
     ],
 ];
