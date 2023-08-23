@@ -10,6 +10,8 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\In;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 use function Laravel\Prompts\error;
@@ -236,6 +238,26 @@ class ValidationTest extends TestCase
 
         self::assertTrue($validator->fails());
         self::assertFalse($validator->passes());
+
+        $message = $validator->getMessageBag();
+
+        Log::info($message->toJson(JSON_PRETTY_PRINT));
+    }
+    public function testValidatorRuleClasses(): void
+    {
+        $data = [
+            'username' => 'daud',
+            'password' => 'daud28@',
+        ];
+        $rules = [
+            'username' => ['required', new In(['daud'])],
+            'password' => ['required', Password::min(6)->letters()->numbers()->symbols()],
+        ];
+        $validator = Validator::make($data, $rules);
+        self::assertNotNull($validator);
+
+        self::assertFalse($validator->fails());
+        self::assertTrue($validator->passes());
 
         $message = $validator->getMessageBag();
 
