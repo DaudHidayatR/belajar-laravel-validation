@@ -9,20 +9,18 @@
 </head>
 <body>
     @if($errors->any())
-        <div class="alert alert-danger">
             <ul>
-                @foreach($errors->all() as $errors)
-                    <li>{{$errors}}</li>
+                @foreach($errors->all() as $error)
+                    <li>{{$error}}</li>
                 @endforeach
             </ul>
-        </div>
     @endif
 <form action="{{route('submit-form')}}" method="post">
     @csrf
-    <label for="username">Username</label>
+    <label for="username">Username @error('username'){{$message}} @enderror</label>
     <br>
     <input type="text" name="username" >
-    <label for="username">Password</label>
+    <label for="password">Password @error('password'){{$message}} @enderror</label>
     <input type="password" name="password">
     <input type="submit" value="login">
 </form>
