@@ -40,7 +40,7 @@ class FormControllerTest extends TestCase
     public function testFormSuccess(): void
     {
         $response = $this->post('/form', [
-            'username' => 'daud',
+            'username' => 'daud28ramadhan@gmail.com',
             'password' => 'daud28@hidayat',
         ]);
         $response->assertStatus(200);
