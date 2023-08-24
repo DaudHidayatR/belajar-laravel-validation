@@ -19,9 +19,9 @@
     @csrf
     <label for="username">Username @error('username'){{$message}} @enderror</label>
     <br>
-    <input type="text" name="username" >
+    <input type="text" name="username" value="{{old('username')}}" >
     <label for="password">Password @error('password'){{$message}} @enderror</label>
-    <input type="password" name="password">
+    <input type="password" name="password" value="{{old('password')}}">
     <input type="submit" value="login">
 </form>
 </body>
